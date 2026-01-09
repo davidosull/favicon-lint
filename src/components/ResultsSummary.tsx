@@ -86,6 +86,7 @@ export function ResultsSummary({ result }: ResultsSummaryProps) {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[var(--background)] border flex items-center justify-center overflow-hidden">
               {bestFavicon && !faviconError ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={bestFavicon.url}
                   alt={`${result.domain} favicon`}

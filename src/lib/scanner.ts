@@ -196,7 +196,7 @@ async function validateFavicon(ref: FaviconReference): Promise<FaviconResult> {
       accessible: true,
       httpStatus: response.status
     };
-  } catch (error) {
+  } catch {
     return {
       url: ref.url,
       accessible: false
