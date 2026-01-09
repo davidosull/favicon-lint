@@ -8,6 +8,7 @@ import {
   Text,
   Link,
   Hr,
+  Img,
 } from '@react-email/components';
 
 interface BaseEmailProps {
@@ -23,7 +24,13 @@ export function BaseEmail({ preview, children }: BaseEmailProps) {
       <Body style={main}>
         <Container style={container}>
           <Section style={header}>
-            <Text style={logo}>FaviconLint</Text>
+            <Img
+              src="https://faviconlint.netlify.app/logo-dark.svg"
+              width="164"
+              height="32"
+              alt="FaviconLint"
+              style={logo}
+            />
           </Section>
 
           {children}
@@ -33,7 +40,7 @@ export function BaseEmail({ preview, children }: BaseEmailProps) {
           <Section style={footer}>
             <Text style={footerText}>
               This email was sent by{' '}
-              <Link href="https://faviconlint.com" style={footerLink}>
+              <Link href="https://faviconlint.netlify.app" style={footerLink}>
                 FaviconLint
               </Link>
               , a free favicon checker tool.
@@ -64,9 +71,6 @@ const header = {
 };
 
 const logo = {
-  fontSize: '20px',
-  fontWeight: '600',
-  color: '#0a0a0a',
   margin: '0',
 };
 
