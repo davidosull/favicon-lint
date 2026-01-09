@@ -165,16 +165,27 @@ export function IssueCard({ check }: IssueCardProps) {
           <div className="flex items-center gap-2">
             <span className="text-sm text-white">{check.name}</span>
           </div>
-          <p className="text-xs text-[var(--muted)] mt-0.5">{check.description}</p>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{check.description}</p>
 
           {check.details && (
-            <pre className="text-xs text-[var(--muted)] mt-2 font-mono bg-[var(--surface)] px-2 py-1.5 rounded whitespace-pre-wrap">
-              {check.details}
-            </pre>
+            <div className="text-sm text-[var(--muted)] mt-3 p-3 font-mono bg-[var(--surface)] border rounded space-y-1">
+              {check.details.split('\n').map((line, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  {line.startsWith('✓') ? (
+                    <>
+                      <Check className="w-4 h-4 text-[var(--success)] flex-shrink-0" />
+                      <span>{line.slice(1).trim()}</span>
+                    </>
+                  ) : (
+                    <span>{line}</span>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
 
           {check.recommendation && (
-            <p className="text-xs text-[var(--muted)] mt-2 pl-3 border-l-2 border-[var(--border)]">
+            <p className="text-sm text-[var(--muted)] mt-2 pl-3 border-l-2 border-[var(--border)]">
               {check.recommendation}
             </p>
           )}
@@ -182,7 +193,7 @@ export function IssueCard({ check }: IssueCardProps) {
           {hasGuide && (
             <button
               onClick={() => setShowGuide(!showGuide)}
-              className="mt-2 flex items-center gap-1 text-xs text-[var(--accent)] hover:text-[var(--accent)]/80 transition-colors cursor-pointer"
+              className="mt-2 flex items-center gap-1 text-sm text-[var(--accent)] hover:text-[var(--accent)]/80 transition-colors cursor-pointer"
             >
               <span>How to fix</span>
               <ChevronDown className={cn(
@@ -194,8 +205,8 @@ export function IssueCard({ check }: IssueCardProps) {
 
           {hasGuide && showGuide && (
             <div className="mt-3 p-3 bg-[var(--surface)] rounded-lg border">
-              <p className="text-xs font-medium text-white mb-2">{guide.title}</p>
-              <ol className="text-xs text-[var(--muted)] space-y-1.5 list-decimal list-inside">
+              <p className="text-sm font-medium text-white mb-2">{guide.title}</p>
+              <ol className="text-sm text-[var(--muted)] space-y-1.5 list-decimal list-inside">
                 {guide.steps.map((step, i) => (
                   <li key={i} className="leading-relaxed">{step}</li>
                 ))}

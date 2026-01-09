@@ -12,7 +12,6 @@ interface MonitoringFormProps {
 
 export function MonitoringForm({ domain, onSuccess, onCancel }: MonitoringFormProps) {
   const [email, setEmail] = useState('');
-  const [frequency, setFrequency] = useState<'daily' | 'weekly'>('weekly');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,7 +37,7 @@ export function MonitoringForm({ domain, onSuccess, onCancel }: MonitoringFormPr
       const response = await fetch('/api/monitor/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ domain, email: trimmedEmail, frequency })
+        body: JSON.stringify({ domain, email: trimmedEmail })
       });
 
       const data = await response.json();
@@ -56,82 +55,68 @@ export function MonitoringForm({ domain, onSuccess, onCancel }: MonitoringFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <div>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          disabled={isLoading}
-          className={cn(
-            "w-full h-9 px-3 text-sm bg-[var(--surface)] text-white placeholder:text-[var(--muted)]",
-            "border rounded",
-            "transition-colors duration-150",
-            "hover:bg-[var(--surface-hover)] hover:border-[var(--border-hover)]",
-            "focus:bg-[var(--surface-hover)] focus:border-[var(--border-hover)]",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
-            error && "border-[var(--error)]/50"
-          )}
-        />
-        {error && <p className="mt-1 text-xs text-[var(--error)]">{error}</p>}
-      </div>
-
-      <div className="flex gap-3">
-        <label className="flex items-center gap-2 cursor-pointer">
+    <form onSubmit={handleSubmit}>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex-1 flex gap-2">
           <input
-            type="radio"
-            name="frequency"
-            checked={frequency === 'daily'}
-            onChange={() => setFrequency('daily')}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
             disabled={isLoading}
-            className="w-3.5 h-3.5 text-white bg-[var(--surface)] border-[var(--border)]"
+            className={cn(
+              "flex-1 h-9 px-3 text-sm bg-[var(--surface)] text-white placeholder:text-[var(--muted)]",
+              "border rounded",
+              "transition-colors duration-150",
+              "hover:bg-[var(--surface-hover)] hover:border-[var(--border-hover)]",
+              "focus:bg-[var(--surface-hover)] focus:border-[var(--border-hover)]",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              error && "border-[var(--error)]/50"
+            )}
           />
-          <span className="text-xs text-[var(--muted)]">Daily</span>
-        </label>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="radio"
-            name="frequency"
-            checked={frequency === 'weekly'}
-            onChange={() => setFrequency('weekly')}
+          <button
+            type="button"
+            onClick={onCancel}
             disabled={isLoading}
-            className="w-3.5 h-3.5 text-white bg-[var(--surface)] border-[var(--border)]"
-          />
-          <span className="text-xs text-[var(--muted)]">Weekly</span>
-        </label>
+            className="h-9 px-2 text-[var(--muted)] hover:text-white transition-colors cursor-pointer sm:hidden"
+            aria-label="Cancel"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={cn(
+              "flex-1 sm:flex-none h-9 px-4 text-sm font-medium text-black bg-white rounded",
+              "transition-colors duration-150",
+              "hover:bg-white/90",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              "flex items-center justify-center gap-1.5 cursor-pointer"
+            )}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Subscribing</span>
+              </>
+            ) : (
+              'Subscribe'
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isLoading}
+            className="hidden sm:flex h-9 px-2 text-[var(--muted)] hover:text-white transition-colors cursor-pointer items-center"
+            aria-label="Cancel"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </div>
-
-      <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={cn(
-            "flex-1 h-8 px-3 text-xs font-medium text-black bg-white rounded",
-            "transition-colors duration-150",
-            "hover:bg-white/90",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
-            "flex items-center justify-center gap-1.5 cursor-pointer"
-          )}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-3 h-3 animate-spin" />
-              <span>Subscribing</span>
-            </>
-          ) : (
-            'Subscribe'
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          disabled={isLoading}
-          className="h-8 px-2 text-[var(--muted)] hover:text-white transition-colors cursor-pointer"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
+      {error && <p className="mt-2 text-xs text-[var(--error)]">{error}</p>}
     </form>
   );
 }

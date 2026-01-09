@@ -8,7 +8,6 @@ import crypto from 'crypto';
 const requestSchema = z.object({
   domain: z.string().min(1, 'Domain is required'),
   email: z.string().email('Invalid email address'),
-  frequency: z.enum(['daily', 'weekly']).default('weekly')
 });
 
 const MAX_MONITORS_PER_EMAIL = 3;
@@ -16,7 +15,8 @@ const MAX_MONITORS_PER_EMAIL = 3;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { domain, email, frequency } = requestSchema.parse(body);
+    const { domain, email } = requestSchema.parse(body);
+    const frequency = 'monthly';
 
     const normalizedDomain = normalizeDomain(domain);
     const emailHash = hashEmail(email);

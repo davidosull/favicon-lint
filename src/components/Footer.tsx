@@ -1,36 +1,30 @@
 'use client';
 
-import { Github } from 'lucide-react';
+import Link from 'next/link';
 
-interface FooterProps {
-  rateLimits?: {
-    hourlyRemaining: number;
-    dailyRemaining: number;
-  };
-}
+export function Footer() {
+  const currentYear = new Date().getFullYear();
 
-export function Footer({ rateLimits }: FooterProps) {
   return (
     <footer className="border-t mt-auto">
-      <div className="max-w-3xl mx-auto px-4 py-4">
-        <div className="flex items-center justify-between text-xs text-[var(--muted)]">
-          <span>FaviconLint</span>
+      <div className="max-w-3xl mx-auto px-4 py-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--muted)]">
+          <span>&copy; {currentYear} FaviconLint. All rights reserved.</span>
 
-          {rateLimits && (
-            <span className="tabular-nums">
-              {rateLimits.hourlyRemaining} scans remaining
-            </span>
-          )}
-
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 hover:text-white transition-colors"
-          >
-            <Github className="w-3.5 h-3.5" />
-            <span>GitHub</span>
-          </a>
+          <nav className="flex items-center gap-4">
+            <Link
+              href="/privacy"
+              className="hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/cookies"
+              className="hover:text-white transition-colors"
+            >
+              Cookie Policy
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

@@ -17,20 +17,25 @@ CREATE INDEX IF NOT EXISTS idx_scan_cache_expires ON scan_cache(expires_at);
 CREATE TABLE IF NOT EXISTS monitors (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   domain TEXT NOT NULL,
+  email TEXT NOT NULL,
   email_hash TEXT NOT NULL,
-  frequency TEXT CHECK (frequency IN ('daily', 'weekly')) DEFAULT 'weekly',
+  frequency TEXT DEFAULT 'monthly',
+  is_active BOOLEAN DEFAULT true,
+  is_verified BOOLEAN DEFAULT false,
+  verification_token UUID,
+  verification_expires TIMESTAMPTZ,
+  unsubscribe_token UUID DEFAULT gen_random_uuid() UNIQUE,
   last_checked TIMESTAMPTZ,
   last_score INTEGER,
   last_notified TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  is_active BOOLEAN DEFAULT true,
-  unsubscribe_token UUID DEFAULT gen_random_uuid() UNIQUE
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_monitors_domain ON monitors(domain);
 CREATE INDEX IF NOT EXISTS idx_monitors_email_hash ON monitors(email_hash);
 CREATE INDEX IF NOT EXISTS idx_monitors_active ON monitors(is_active);
 CREATE INDEX IF NOT EXISTS idx_monitors_unsubscribe_token ON monitors(unsubscribe_token);
+CREATE INDEX IF NOT EXISTS idx_monitors_verification_token ON monitors(verification_token);
 
 -- Rate limits table
 CREATE TABLE IF NOT EXISTS rate_limits (

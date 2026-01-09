@@ -9,7 +9,7 @@ import { BaseEmail } from './BaseEmail';
 interface VerificationEmailProps {
   domain: string;
   verifyUrl: string;
-  frequency: 'daily' | 'weekly';
+  frequency: 'monthly';
 }
 
 export function VerificationEmail({

@@ -39,11 +39,8 @@ export async function GET(request: NextRequest) {
       const lastChecked = new Date(monitor.last_checked);
       const hoursSinceLastCheck = (now.getTime() - lastChecked.getTime()) / (1000 * 60 * 60);
 
-      if (monitor.frequency === 'daily') {
-        return hoursSinceLastCheck >= 24;
-      } else {
-        return hoursSinceLastCheck >= 168; // 7 days
-      }
+      // Monthly frequency: check every 30 days (720 hours)
+      return hoursSinceLastCheck >= 720;
     });
 
     const results = {

@@ -31,7 +31,7 @@ export function CheckCategory({ category, defaultExpanded = true }: CheckCategor
       >
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-white">{category.name}</span>
-          <span className="text-xs text-[var(--muted)]">
+          <span className="text-sm text-[var(--muted)]">
             {passedCount}/{totalCount}
           </span>
         </div>

@@ -74,7 +74,7 @@ export function ResultsSummary({ result }: ResultsSummaryProps) {
         <div className="flex items-center gap-6">
           <div className="text-center">
             <div className={cn("text-5xl font-semibold tabular-nums", getScoreColor(result.overallScore))}>
-              {result.overallScore}
+              {result.overallScore}<span className="text-2xl text-[var(--muted)]">/100</span>
             </div>
             <div className="text-xs text-[var(--muted)] mt-1 uppercase tracking-wide">
               {getScoreLabel(result.overallScore)}
@@ -99,8 +99,8 @@ export function ResultsSummary({ result }: ResultsSummaryProps) {
             <div>
               <div className="font-mono text-sm text-white mb-1">{result.domain}</div>
               {result.fromCache && (
-                <div className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
-                  <Clock className="w-3 h-3" />
+                <div className="flex items-center gap-1.5 text-sm text-[var(--muted)]">
+                  <Clock className="w-3.5 h-3.5" />
                   <span>Cached</span>
                 </div>
               )}
@@ -135,12 +135,12 @@ export function ResultsSummary({ result }: ResultsSummaryProps) {
           <p className="text-sm text-white font-medium">
             Favicon not showing in Google?
           </p>
-          <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
+          <p className="text-sm text-[var(--muted)] mt-1 leading-relaxed">
             Your favicon configuration looks good. If Google isn&apos;t displaying it yet, they may not have recrawled your site. This can take days to weeks.
           </p>
           <div className="mt-3 space-y-2">
-            <p className="text-xs text-[var(--muted)]">To speed up the process:</p>
-            <ul className="text-xs text-[var(--muted)] space-y-1.5">
+            <p className="text-sm text-[var(--muted)]">To speed up the process:</p>
+            <ul className="text-sm text-[var(--muted)] space-y-1.5">
               <li className="flex items-start gap-2">
                 <span className="text-[var(--accent)]">1.</span>
                 <span>

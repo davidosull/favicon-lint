@@ -29,6 +29,10 @@
   border-color: var(--border);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -37,6 +41,11 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
+}
+
+/* Scroll margin for anchor links to account for header */
+[id] {
+  scroll-margin-top: 80px;
 }
 
 /* Subtle grid background pattern */
