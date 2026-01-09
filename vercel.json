@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/monitor/check",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cleanup/rate-limits",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cleanup/cache",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
