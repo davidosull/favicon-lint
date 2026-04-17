@@ -62,15 +62,18 @@ export function formatBytes(bytes: number): string {
 }
 
 export function calculateScore(checks: { status: 'pass' | 'fail' | 'warning' | 'info' }[]): number {
-  if (checks.length === 0) return 100;
+  const scorable = checks.filter((c) => c.status !== 'info');
+  if (scorable.length === 0) return 100;
 
   const weights = {
     pass: 1,
     warning: 0.5,
-    info: 0.8,
-    fail: 0
-  };
+    fail: 0,
+  } as const;
 
-  const totalScore = checks.reduce((sum, check) => sum + weights[check.status], 0);
-  return Math.round((totalScore / checks.length) * 100);
+  const totalScore = scorable.reduce(
+    (sum, check) => sum + weights[check.status as keyof typeof weights],
+    0
+  );
+  return Math.round((totalScore / scorable.length) * 100);
 }

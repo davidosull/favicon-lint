@@ -7,6 +7,15 @@ export interface FaviconCheck {
   recommendation?: string;
 }
 
+export interface ImageInfo {
+  width?: number;
+  height?: number;
+  hasAlpha?: boolean;
+  actualFormat?: string;
+  // ICO can contain multiple sizes
+  icoSizes?: string[];
+}
+
 export interface FaviconResult {
   url: string;
   size?: number;
@@ -14,6 +23,32 @@ export interface FaviconResult {
   format?: string;
   accessible: boolean;
   httpStatus?: number;
+  rel?: string;
+  media?: string;
+  declaredSizes?: string;
+  cacheControl?: string | null;
+  image?: ImageInfo;
+}
+
+export interface ManifestIcon {
+  src: string;
+  sizes?: string;
+  type?: string;
+  purpose?: string;
+}
+
+export interface ManifestResult {
+  url?: string;
+  accessible: boolean;
+  parseError?: string;
+  parsed?: {
+    name?: string;
+    short_name?: string;
+    theme_color?: string;
+    background_color?: string;
+    display?: string;
+    icons?: ManifestIcon[];
+  };
 }
 
 export interface ScanResult {
@@ -43,23 +78,6 @@ export interface ScanCache {
   scan_data: ScanResult;
   cached_at: string;
   expires_at: string;
-}
-
-export interface Monitor {
-  id: string;
-  domain: string;
-  email: string;
-  email_hash: string;
-  frequency: 'daily' | 'weekly';
-  last_checked: string | null;
-  last_score: number | null;
-  last_notified: string | null;
-  created_at: string;
-  is_active: boolean;
-  is_verified: boolean;
-  verification_token: string | null;
-  verification_expires: string | null;
-  unsubscribe_token: string;
 }
 
 export interface RateLimit {

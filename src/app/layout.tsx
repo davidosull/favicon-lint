@@ -1,59 +1,76 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata, Viewport } from 'next';
+import { Inter, Geist_Mono } from 'next/font/google';
+import './globals.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  axes: ['opsz'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
+export const viewport: Viewport = {
+  themeColor: '#6967e6',
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://faviconlint.com"),
+  metadataBase: new URL('https://faviconlint.com'),
   title: {
-    default: "FaviconLint - Check Your Favicon Setup",
-    template: "%s | FaviconLint",
+    default: 'FaviconLint — Favicon diagnostics',
+    template: '%s | FaviconLint',
   },
-  description: "Free tool to check if your favicon is set up correctly for all browsers and platforms. Get actionable recommendations to improve your site's appearance in search results.",
-  keywords: ["favicon", "favicon checker", "favicon validator", "favicon lint", "favicon tester", "website icon", "favicon generator", "favicon test"],
-  authors: [{ name: "FaviconLint" }],
-  creator: "FaviconLint",
-  publisher: "FaviconLint",
+  description:
+    'Every place a favicon quietly fails. Paste a URL, see where yours does. Free, no sign-up.',
+  keywords: [
+    'favicon',
+    'favicon checker',
+    'favicon validator',
+    'favicon lint',
+    'favicon tester',
+    'apple touch icon',
+    'manifest.json',
+    'pwa icon',
+  ],
+  authors: [{ name: 'FaviconLint' }],
+  creator: 'FaviconLint',
+  publisher: 'FaviconLint',
   icons: {
     icon: [
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
   },
-  manifest: "/site.webmanifest",
+  manifest: '/site.webmanifest',
   openGraph: {
-    title: "FaviconLint - Check Your Favicon Setup",
-    description: "Free tool to check if your favicon is set up correctly for all browsers and platforms. Get actionable fixes in seconds.",
-    type: "website",
-    locale: "en_US",
-    url: "https://faviconlint.com",
-    siteName: "FaviconLint",
+    title: 'FaviconLint — Favicon diagnostics',
+    description:
+      'Every place a favicon quietly fails. Paste a URL, see where yours does.',
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://faviconlint.com',
+    siteName: 'FaviconLint',
     images: [
       {
-        url: "/og-image.png",
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: "FaviconLint - Favicon not showing? Find out why.",
+        alt: 'FaviconLint — Favicon diagnostics',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "FaviconLint - Check Your Favicon Setup",
-    description: "Free tool to check if your favicon is set up correctly for all browsers and platforms. Get actionable fixes in seconds.",
-    images: ["/og-image.png"],
+    card: 'summary_large_image',
+    title: 'FaviconLint — Favicon diagnostics',
+    description:
+      'Every place a favicon quietly fails. Paste a URL, see where yours does.',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -61,9 +78,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
 };
@@ -74,9 +91,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='en'>
+      <head>
+        {/* Dark-mode favicon — Next's Metadata API doesn't pass `media` through */}
+        <link
+          rel='icon'
+          type='image/svg+xml'
+          media='(prefers-color-scheme: dark)'
+          href='/favicon-dark.svg'
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>

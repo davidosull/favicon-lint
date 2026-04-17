@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FaviconLint — Linear-inspired redesign</title>
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <style>
+      :root {
+        --bg: #08090a;
+        --bg-elev: #0d0e10;
+        --surface: #111214;
+        --surface-2: #16181c;
+        --border: rgba(255, 255, 255, 0.06);
+        --border-strong: rgba(255, 255, 255, 0.1);
+        --fg: #f7f8f8;
+        --fg-dim: #b4b4b4;
+        --fg-muted: #8a8f98;
+        --fg-faint: #62666d;
+
+        /* Linear-esque accent: indigo/violet, not Tailwind blue */
+        --accent: #7170ff;
+        --accent-2: #b59aff;
+        --accent-soft: rgba(113, 112, 255, 0.12);
+
+        --ok: #4cb782;
+        --warn: #f2c94c;
+        --err: #eb5757;
+
+        --radius: 8px;
+        --radius-sm: 6px;
+
+        --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-feature-settings:
+          'ss01',
+          'ss02',
+          'cv11',
+          'calt' 1;
+        font-synthesis: none;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        letter-spacing: -0.011em;
+      }
+      @supports (font-variation-settings: normal) {
+        html,
+        body {
+          font-family: 'Inter var', system-ui, sans-serif;
+        }
+      }
+
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+      .mono {
+        font-family:
+          'Berkeley Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      }
+
+      /* ---------- page chrome ---------- */
+      .page {
+        min-height: 100vh;
+        position: relative;
+        isolation: isolate;
+      }
+      /* Single soft aurora at top — replaces grid+glow combo */
+      .aurora {
+        position: fixed;
+        inset: -20% -10% auto -10%;
+        height: 620px;
+        pointer-events: none;
+        z-index: -1;
+        background:
+          radial-gradient(
+            60% 60% at 30% 20%,
+            rgba(113, 112, 255, 0.14),
+            transparent 60%
+          ),
+          radial-gradient(
+            50% 50% at 80% 0%,
+            rgba(181, 154, 255, 0.1),
+            transparent 60%
+          );
+        filter: blur(2px);
+      }
+      .noise {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.035;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+      }
+
+      /* ---------- header ---------- */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: saturate(160%) blur(10px);
+        background: rgba(8, 9, 10, 0.72);
+        border-bottom: 1px solid var(--border);
+      }
+      .header-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 560;
+        font-size: 14px;
+        letter-spacing: -0.01em;
+      }
+      .brand-mark {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background:
+          radial-gradient(
+            120% 120% at 30% 20%,
+            #9b99ff 0%,
+            #6967e6 55%,
+            #4b49c4 100%
+          );
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+          0 1px 0 rgba(0, 0, 0, 0.6);
+      }
+      .brand-dot {
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--fg-faint);
+        margin: 0 6px;
+        vertical-align: middle;
+      }
+      .brand-tag {
+        color: var(--fg-muted);
+        font-weight: 450;
+      }
+      nav a {
+        color: var(--fg-muted);
+        text-decoration: none;
+        font-size: 13px;
+        margin-left: 22px;
+        transition: color 150ms var(--ease);
+      }
+      nav a:hover {
+        color: var(--fg);
+      }
+      .kbd {
+        display: inline-flex;
+        align-items: center;
+        height: 20px;
+        padding: 0 6px;
+        font-size: 11px;
+        color: var(--fg-muted);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        font-family: 'Inter', system-ui;
+        letter-spacing: 0.02em;
+      }
+
+      /* ---------- layout ---------- */
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 88px 28px 120px;
+      }
+
+      /* ---------- hero ---------- */
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px 4px 8px;
+        font-size: 12px;
+        color: var(--fg-dim);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        margin-bottom: 22px;
+      }
+      .eyebrow-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+      h1 {
+        margin: 0;
+        font-size: 56px;
+        line-height: 1.02;
+        letter-spacing: -0.032em;
+        font-weight: 560;
+      }
+      h1 .accent-line {
+        background: linear-gradient(
+          90deg,
+          var(--accent) 0%,
+          var(--accent-2) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lede {
+        margin: 18px 0 0;
+        max-width: 560px;
+        color: var(--fg-dim);
+        font-size: 17px;
+        line-height: 1.5;
+      }
+
+      /* ---------- command-bar input ---------- */
+      .cmd {
+        margin-top: 36px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 52px;
+        padding: 0 6px 0 14px;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 10px;
+        transition:
+          border-color 150ms var(--ease),
+          background 150ms var(--ease),
+          box-shadow 150ms var(--ease);
+      }
+      .cmd:hover {
+        background: var(--surface-2);
+      }
+      .cmd:focus-within {
+        border-color: rgba(113, 112, 255, 0.55);
+        box-shadow: 0 0 0 4px var(--accent-soft);
+      }
+      .cmd-prefix {
+        color: var(--fg-faint);
+        font-size: 14px;
+        margin-right: 10px;
+      }
+      .cmd input {
+        flex: 1;
+        background: transparent;
+        border: 0;
+        outline: 0;
+        color: var(--fg);
+        font-size: 15px;
+        font-family: inherit;
+        letter-spacing: -0.005em;
+      }
+      .cmd input::placeholder {
+        color: var(--fg-faint);
+      }
+      .cmd-hint {
+        color: var(--fg-faint);
+        font-size: 12px;
+        margin-right: 8px;
+      }
+      .btn-primary {
+        height: 40px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--fg);
+        color: #0a0a0a;
+        border: 0;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 540;
+        letter-spacing: -0.005em;
+        cursor: pointer;
+        transition: transform 120ms var(--ease);
+      }
+      .btn-primary:hover {
+        transform: scale(1.015);
+      }
+      .btn-primary .kbd {
+        background: rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 0, 0, 0.15);
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      .meta-row {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        color: var(--fg-faint);
+        font-size: 12px;
+      }
+      .meta-row .dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 999px;
+        background: currentColor;
+        opacity: 0.6;
+      }
+
+      /* ---------- results ---------- */
+      .section {
+        margin-top: 64px;
+      }
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+      }
+      .section-title {
+        font-size: 13px;
+        font-weight: 520;
+        color: var(--fg);
+        letter-spacing: -0.003em;
+      }
+      .section-caption {
+        font-size: 12px;
+        color: var(--fg-faint);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Summary strip — replaces the big score circle */
+      .summary {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr;
+        gap: 0;
+        background: linear-gradient(
+          180deg,
+          var(--surface) 0%,
+          var(--bg-elev) 100%
+        );
+        border: 1px solid var(--border-strong);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .summary-cell {
+        padding: 22px 24px;
+        border-right: 1px solid var(--border);
+      }
+      .summary-cell:last-child {
+        border-right: 0;
+      }
+      .summary-label {
+        color: var(--fg-faint);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 500;
+      }
+      .summary-value {
+        margin-top: 10px;
+        font-size: 32px;
+        line-height: 1;
+        letter-spacing: -0.025em;
+        font-weight: 520;
+        color: var(--fg);
+        font-variant-numeric: tabular-nums;
+      }
+      .summary-value .unit {
+        font-size: 15px;
+        color: var(--fg-faint);
+        margin-left: 4px;
+        font-weight: 460;
+      }
+      .summary-sub {
+        margin-top: 8px;
+        font-size: 12px;
+        color: var(--fg-muted);
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: -0.002em;
+      }
+      .pill.ok {
+        background: rgba(76, 183, 130, 0.1);
+        color: var(--ok);
+        border: 1px solid rgba(76, 183, 130, 0.22);
+      }
+      .pill.warn {
+        background: rgba(242, 201, 76, 0.1);
+        color: var(--warn);
+        border: 1px solid rgba(242, 201, 76, 0.22);
+      }
+      .pill.err {
+        background: rgba(235, 87, 87, 0.1);
+        color: var(--err);
+        border: 1px solid rgba(235, 87, 87, 0.22);
+      }
+      .pill.neutral {
+        background: var(--surface);
+        color: var(--fg-dim);
+        border: 1px solid var(--border-strong);
+      }
+
+      /* Score bar segments — micro-detail, not a pie */
+      .score-bar {
+        margin-top: 14px;
+        display: flex;
+        gap: 3px;
+      }
+      .score-bar > span {
+        flex: 1;
+        height: 6px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .score-bar > span.on-ok {
+        background: var(--ok);
+      }
+      .score-bar > span.on-warn {
+        background: var(--warn);
+      }
+      .score-bar > span.on-err {
+        background: var(--err);
+      }
+
+      /* Issue list — Linear-style rows */
+      .list {
+        border: 1px solid var(--border-strong);
+        border-radius: 12px;
+        background: var(--surface);
+        overflow: hidden;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 20px 1fr auto auto;
+        gap: 14px;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        transition: background 120ms var(--ease);
+        cursor: pointer;
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .row:hover {
+        background: var(--surface-2);
+      }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        position: relative;
+      }
+      .status-dot.ok {
+        background: var(--ok);
+        box-shadow: 0 0 0 3px rgba(76, 183, 130, 0.15);
+      }
+      .status-dot.warn {
+        background: var(--warn);
+        box-shadow: 0 0 0 3px rgba(242, 201, 76, 0.15);
+      }
+      .status-dot.err {
+        background: var(--err);
+        box-shadow: 0 0 0 3px rgba(235, 87, 87, 0.15);
+      }
+      .row-title {
+        font-size: 14px;
+        font-weight: 460;
+        letter-spacing: -0.005em;
+        color: var(--fg);
+      }
+      .row-title .dim {
+        color: var(--fg-muted);
+        font-weight: 440;
+      }
+      .row-meta {
+        color: var(--fg-faint);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+      .chevron {
+        color: var(--fg-faint);
+        transition: transform 150ms var(--ease);
+      }
+      .row.expanded .chevron {
+        transform: rotate(90deg);
+      }
+
+      .row-detail {
+        padding: 8px 16px 18px 50px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg-elev);
+      }
+      .detail-item {
+        display: grid;
+        grid-template-columns: 16px 1fr auto;
+        gap: 12px;
+        align-items: baseline;
+        padding: 10px 0;
+        border-bottom: 1px dashed var(--border);
+        font-size: 13px;
+      }
+      .detail-item:last-child {
+        border-bottom: 0;
+      }
+      .detail-item .mono {
+        color: var(--fg-muted);
+        font-size: 12.5px;
+      }
+      .detail-item .hint {
+        color: var(--fg-faint);
+        font-size: 12px;
+      }
+
+      /* ---------- monitoring CTA ---------- */
+      .cta {
+        margin-top: 64px;
+        padding: 28px;
+        border: 1px solid var(--border-strong);
+        border-radius: 14px;
+        background:
+          radial-gradient(
+            120% 140% at 100% 0%,
+            rgba(113, 112, 255, 0.08),
+            transparent 60%
+          ),
+          var(--surface);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 20px;
+      }
+      .cta-title {
+        font-size: 17px;
+        font-weight: 520;
+        letter-spacing: -0.012em;
+      }
+      .cta-sub {
+        margin-top: 6px;
+        color: var(--fg-muted);
+        font-size: 13px;
+      }
+      .btn-ghost {
+        height: 40px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        color: var(--fg);
+        border: 1px solid var(--border-strong);
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background 120ms var(--ease),
+          border-color 120ms var(--ease);
+      }
+      .btn-ghost:hover {
+        background: var(--surface-2);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+
+      /* ---------- footer ---------- */
+      footer {
+        border-top: 1px solid var(--border);
+        margin-top: 96px;
+      }
+      .footer-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 22px 28px;
+        display: flex;
+        justify-content: space-between;
+        color: var(--fg-faint);
+        font-size: 12px;
+      }
+
+      /* ---------- fine ---------- */
+      @media (max-width: 720px) {
+        h1 {
+          font-size: 38px;
+        }
+        main {
+          padding: 56px 20px 80px;
+        }
+        .summary {
+          grid-template-columns: 1fr 1fr;
+        }
+        .summary-cell:nth-child(2) {
+          border-right: 0;
+        }
+        .summary-cell:nth-child(1),
+        .summary-cell:nth-child(2) {
+          border-bottom: 1px solid var(--border);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="aurora"></div>
+      <div class="noise"></div>
+
+      <header>
+        <div class="header-inner">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>FaviconLint</span>
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span class="brand-tag">Favicon diagnostics</span>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <!-- HERO -->
+        <section>
+          <span class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            Instant · no sign-up · 12 checks
+          </span>
+
+          <h1>
+            Your favicon is broken.<br />
+            <span class="accent-line">Here's exactly why.</span>
+          </h1>
+
+          <p class="lede">
+            A surgical linter for favicons — 12 checks across sizes, platforms,
+            manifest, and robots. Paste a URL, get the fixes.
+          </p>
+
+          <form class="cmd" onsubmit="return false">
+            <span class="cmd-prefix mono">https://</span>
+            <input
+              type="text"
+              placeholder="your-domain.com"
+              value="stripe.com"
+              aria-label="Domain to scan"
+            />
+            <span class="cmd-hint">Press</span>
+            <button class="btn-primary" type="submit">
+              Scan <span class="kbd">⏎</span>
+            </button>
+          </form>
+
+          <div class="meta-row">
+            <span>No account required</span>
+            <span class="dot"></span>
+            <span>Results cached 6h</span>
+            <span class="dot"></span>
+            <span>10 scans / hour</span>
+          </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section class="section">
+          <div class="section-head">
+            <div class="section-title">
+              Results
+              <span style="color: var(--fg-faint); font-weight: 440"
+                >— stripe.com</span
+              >
+            </div>
+            <div class="section-caption">
+              Scanned 2.4s ago · <a href="#" style="color: var(--fg-muted)">Refresh</a>
+            </div>
+          </div>
+
+          <div class="summary">
+            <div class="summary-cell">
+              <div class="summary-label">Overall</div>
+              <div class="summary-value num">
+                72<span class="unit">/ 100</span>
+              </div>
+              <div class="score-bar" aria-hidden="true">
+                <span class="on-ok"></span>
+                <span class="on-ok"></span>
+                <span class="on-ok"></span>
+                <span class="on-ok"></span>
+                <span class="on-ok"></span>
+                <span class="on-ok"></span>
+                <span class="on-ok"></span>
+                <span class="on-warn"></span>
+                <span class="on-warn"></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-label">Passed</div>
+              <div class="summary-value num">
+                8<span class="unit">/ 12</span>
+              </div>
+              <div class="summary-sub">
+                <span class="pill ok">● All critical passing</span>
+              </div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-label">Warnings</div>
+              <div class="summary-value num">3</div>
+              <div class="summary-sub">Sizes, Apple Touch, Manifest</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-label">Errors</div>
+              <div class="summary-value num">1</div>
+              <div class="summary-sub">
+                <span class="pill err">● theme_color missing</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Issue list -->
+          <div class="list" style="margin-top: 18px" role="list">
+            <div class="row" role="listitem">
+              <span class="status-dot ok" aria-label="passing"></span>
+              <div class="row-title">
+                Basic discovery
+                <span class="dim">— favicon.ico, link tags, MIME types</span>
+              </div>
+              <span class="pill ok">4 / 4</span>
+              <svg
+                class="chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+
+            <div class="row expanded" role="listitem">
+              <span class="status-dot warn" aria-label="warning"></span>
+              <div class="row-title">
+                Sizes & resolutions
+                <span class="dim">— 16×16, 32×32, 180×180, 512×512</span>
+              </div>
+              <span class="pill warn">2 / 4</span>
+              <svg
+                class="chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+            <div class="row-detail">
+              <div class="detail-item">
+                <span style="color: var(--ok)">●</span>
+                <div>
+                  <div>16×16 favicon detected</div>
+                  <div class="mono">/favicon-16x16.png · 612 B</div>
+                </div>
+                <span class="hint">Instant</span>
+              </div>
+              <div class="detail-item">
+                <span style="color: var(--ok)">●</span>
+                <div>
+                  <div>32×32 favicon detected</div>
+                  <div class="mono">/favicon-32x32.png · 1.2 KB</div>
+                </div>
+                <span class="hint">Instant</span>
+              </div>
+              <div class="detail-item">
+                <span style="color: var(--warn)">●</span>
+                <div>
+                  <div>512×512 PWA icon missing</div>
+                  <div class="mono">
+                    Expected: /icon-512x512.png (referenced in manifest)
+                  </div>
+                </div>
+                <span class="hint">Fix →</span>
+              </div>
+              <div class="detail-item">
+                <span style="color: var(--warn)">●</span>
+                <div>
+                  <div>apple-touch-icon below 180×180</div>
+                  <div class="mono">Served 120×120 — iOS 12+ expects 180</div>
+                </div>
+                <span class="hint">Fix →</span>
+              </div>
+            </div>
+
+            <div class="row" role="listitem">
+              <span class="status-dot warn" aria-label="warning"></span>
+              <div class="row-title">
+                Platform manifests
+                <span class="dim"
+                  >— manifest.webmanifest, theme-color, display</span
+                >
+              </div>
+              <span class="pill warn">2 / 3</span>
+              <svg
+                class="chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+            <div class="row" role="listitem">
+              <span class="status-dot ok" aria-label="passing"></span>
+              <div class="row-title">
+                Robots & caching
+                <span class="dim">— robots.txt, cache headers</span>
+              </div>
+              <span class="pill ok">2 / 2</span>
+              <svg
+                class="chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+            <div class="row" role="listitem">
+              <span class="status-dot err" aria-label="error"></span>
+              <div class="row-title">
+                Accessibility & branding
+                <span class="dim">— alt text, theme_color, dark variant</span>
+              </div>
+              <span class="pill err">1 / 3</span>
+              <svg
+                class="chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <footer>
+        <div class="footer-inner">
+          <div>
+            FaviconLint — built by
+            <a
+              href="https://osull.io"
+              style="color: var(--fg-muted); text-decoration: none"
+              >osull.io</a
+            >
+          </div>
+          <div>
+            <a href="#" style="color: var(--fg-muted); text-decoration: none"
+              >Privacy</a
+            >
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

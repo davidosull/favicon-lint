@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import type { CategoryResult } from '@/types';
 import { IssueCard } from './IssueCard';
@@ -9,47 +9,89 @@ import { cn } from '@/lib/utils';
 interface CheckCategoryProps {
   category: CategoryResult;
   defaultExpanded?: boolean;
+  isLast?: boolean;
 }
 
-function getScoreColor(score: number): string {
-  if (score >= 80) return 'text-[var(--success)]';
-  if (score >= 60) return 'text-[var(--warning)]';
-  return 'text-[var(--error)]';
+function categoryTone(
+  category: CategoryResult
+): 'ok' | 'warn' | 'err' {
+  const hasFail = category.checks.some((c) => c.status === 'fail');
+  if (hasFail) return 'err';
+  if (category.score < 80) return 'warn';
+  return 'ok';
 }
 
-export function CheckCategory({ category, defaultExpanded = true }: CheckCategoryProps) {
+const dotStyle: Record<'ok' | 'warn' | 'err', string> = {
+  ok: 'bg-[var(--success)] shadow-[0_0_0_3px_var(--success-muted)]',
+  warn: 'bg-[var(--warning)] shadow-[0_0_0_3px_var(--warning-muted)]',
+  err: 'bg-[var(--error)] shadow-[0_0_0_3px_var(--error-muted)]',
+};
+
+const pillStyle: Record<'ok' | 'warn' | 'err', string> = {
+  ok: 'bg-[var(--success-muted)] text-[var(--success)] border-[color:rgba(76,183,130,0.22)]',
+  warn: 'bg-[var(--warning-muted)] text-[var(--warning)] border-[color:rgba(242,201,76,0.22)]',
+  err: 'bg-[var(--error-muted)] text-[var(--error)] border-[color:rgba(235,87,87,0.22)]',
+};
+
+export function CheckCategory({
+  category,
+  defaultExpanded = false,
+  isLast = false,
+}: CheckCategoryProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
-  const passedCount = category.checks.filter(c => c.status === 'pass').length;
-  const totalCount = category.checks.length;
+  const scorable = category.checks.filter((c) => c.status !== 'info');
+  const passedCount = scorable.filter((c) => c.status === 'pass').length;
+  const totalCount = scorable.length;
+  const tone = categoryTone(category);
+
+  const subtitle = buildSubtitle(category);
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className={cn(!isLast && 'border-b')}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-[var(--surface)] transition-colors cursor-pointer"
+        className={cn(
+          'w-full grid grid-cols-[20px_1fr_auto_auto] gap-3.5 items-center',
+          'px-4 py-3 text-left',
+          'transition-colors duration-150',
+          'hover:bg-[var(--surface-2)] cursor-pointer'
+        )}
       >
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-white">{category.name}</span>
-          <span className="text-sm text-[var(--muted)]">
-            {passedCount}/{totalCount}
-          </span>
+        <span
+          className={cn(
+            'w-2.5 h-2.5 rounded-full justify-self-center',
+            dotStyle[tone]
+          )}
+          aria-label={tone}
+        />
+        <div className='min-w-0 text-sm'>
+          <span className='font-[460] text-white'>{category.name}</span>
+          {subtitle && (
+            <span className='text-[var(--muted)] font-[440]'>
+              {' '}
+              — {subtitle}
+            </span>
+          )}
         </div>
-        <div className="flex items-center gap-3">
-          <span className={cn("text-sm font-medium tabular-nums", getScoreColor(category.score))}>
-            {category.score}%
-          </span>
-          <ChevronDown
-            className={cn(
-              "w-4 h-4 text-[var(--muted)] transition-transform duration-200",
-              isExpanded && "rotate-180"
-            )}
-          />
-        </div>
+        <span
+          className={cn(
+            'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border num',
+            pillStyle[tone]
+          )}
+        >
+          {passedCount} / {totalCount}
+        </span>
+        <ChevronRight
+          className={cn(
+            'w-3.5 h-3.5 text-[var(--fg-faint)] transition-transform duration-150',
+            isExpanded && 'rotate-90'
+          )}
+        />
       </button>
 
       {isExpanded && (
-        <div className="border-t">
+        <div className='bg-[var(--bg-elev)] pl-[50px] pr-4 pt-1 pb-4'>
           {category.checks.map((check) => (
             <IssueCard key={check.id} check={check} />
           ))}
@@ -57,4 +99,10 @@ export function CheckCategory({ category, defaultExpanded = true }: CheckCategor
       )}
     </div>
   );
+}
+
+function buildSubtitle(category: CategoryResult): string {
+  const names = category.checks.map((c) => c.name).slice(0, 3);
+  if (category.checks.length > 3) names.push('…');
+  return names.join(', ');
 }

@@ -1,30 +1,25 @@
 'use client';
 
-import Image from 'next/image';
-
 export function Header() {
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = '/';
-  };
-
   return (
-    <header className='border-b'>
-      <div className='max-w-3xl mx-auto px-4 py-3 flex items-center'>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+    <header className='sticky top-0 z-10 backdrop-blur-md bg-[rgba(8,9,10,0.72)] border-b'>
+      <div className='max-w-[960px] mx-auto px-5 md:px-7 py-3.5 flex items-center'>
         <a
           href='/'
-          onClick={handleClick}
-          className='inline-block hover:opacity-80 transition-opacity'
+          className='flex items-center gap-2.5 text-sm font-medium tracking-tight hover:opacity-90 transition-opacity'
         >
-          <Image
-            src='/logo.svg'
-            alt='FaviconLint'
-            width={120}
-            height={24}
-            className='h-6 w-auto'
-            priority
+          <span
+            className='brand-mark w-[22px] h-[22px] rounded-md'
+            aria-hidden='true'
           />
+          <span className='text-white'>FaviconLint</span>
+          <span
+            className='inline-block w-1 h-1 rounded-full bg-[var(--fg-faint)] mx-1.5'
+            aria-hidden='true'
+          />
+          <span className='text-[var(--muted)] font-normal'>
+            Favicon diagnostics
+          </span>
         </a>
       </div>
     </header>

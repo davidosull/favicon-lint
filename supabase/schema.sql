@@ -13,30 +13,6 @@ CREATE TABLE IF NOT EXISTS scan_cache (
 CREATE INDEX IF NOT EXISTS idx_scan_cache_domain ON scan_cache(domain);
 CREATE INDEX IF NOT EXISTS idx_scan_cache_expires ON scan_cache(expires_at);
 
--- Monitors table
-CREATE TABLE IF NOT EXISTS monitors (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  domain TEXT NOT NULL,
-  email TEXT NOT NULL,
-  email_hash TEXT NOT NULL,
-  frequency TEXT DEFAULT 'monthly',
-  is_active BOOLEAN DEFAULT true,
-  is_verified BOOLEAN DEFAULT false,
-  verification_token UUID,
-  verification_expires TIMESTAMPTZ,
-  unsubscribe_token UUID DEFAULT gen_random_uuid() UNIQUE,
-  last_checked TIMESTAMPTZ,
-  last_score INTEGER,
-  last_notified TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_monitors_domain ON monitors(domain);
-CREATE INDEX IF NOT EXISTS idx_monitors_email_hash ON monitors(email_hash);
-CREATE INDEX IF NOT EXISTS idx_monitors_active ON monitors(is_active);
-CREATE INDEX IF NOT EXISTS idx_monitors_unsubscribe_token ON monitors(unsubscribe_token);
-CREATE INDEX IF NOT EXISTS idx_monitors_verification_token ON monitors(verification_token);
-
 -- Rate limits table
 CREATE TABLE IF NOT EXISTS rate_limits (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -67,15 +43,11 @@ CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON analytics(timestamp);
 
 -- Enable Row Level Security
 ALTER TABLE scan_cache ENABLE ROW LEVEL SECURITY;
-ALTER TABLE monitors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rate_limits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE analytics ENABLE ROW LEVEL SECURITY;
 
 -- Policies for service role access (used by API routes)
 CREATE POLICY "Service role full access to scan_cache" ON scan_cache
-  FOR ALL USING (true);
-
-CREATE POLICY "Service role full access to monitors" ON monitors
   FOR ALL USING (true);
 
 CREATE POLICY "Service role full access to rate_limits" ON rate_limits

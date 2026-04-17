@@ -4,156 +4,50 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata = {
-  title: 'Privacy Policy',
-  description: 'Privacy policy for FaviconLint favicon checker tool.',
+  title: 'Privacy — FaviconLint',
+  description: 'What FaviconLint stores, and why.',
 };
 
 export default function PrivacyPage() {
   return (
-    <div className='min-h-screen flex flex-col bg-grid'>
-      <div className='glow fixed inset-0 pointer-events-none' />
+    <div className='min-h-screen flex flex-col relative'>
+      <div className='aurora' aria-hidden='true' />
+      <div className='noise' aria-hidden='true' />
       <Header />
 
-      <main className='flex-1 relative'>
-        <div className='max-w-3xl mx-auto px-4 py-16'>
-          <h1 className='text-3xl font-semibold text-white mb-2'>
-            Privacy Policy
-          </h1>
-          <p className='text-sm text-[var(--muted)] mb-8'>
-            Last updated: January 2025
+      <main className='flex-1 relative z-[1]'>
+        <div className='max-w-2xl mx-auto px-5 md:px-7 py-16'>
+          <h1 className='text-3xl font-semibold text-white mb-2'>Privacy</h1>
+          <p className='text-sm text-[var(--muted)] mb-10'>
+            Short version: we don't want your data and don't collect more than
+            we need to run the tool.
           </p>
 
-          <div className='prose prose-invert prose-sm max-w-none space-y-8'>
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>Overview</h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                FaviconLint is a free tool that checks favicon configurations
-                for websites. We are committed to protecting your privacy and
-                being transparent about what data we collect and how we use it.
-              </p>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>
-                Data We Collect
-              </h2>
-
-              <h3 className='text-sm font-medium text-white mt-4 mb-2'>
-                Scan Data
-              </h3>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                When you scan a website, we temporarily cache the scan results
-                to improve performance. This includes the domain name and
-                favicon analysis results. Cached data is automatically deleted
-                after 24 hours.
-              </p>
-
-              <h3 className='text-sm font-medium text-white mt-4 mb-2'>
-                Monitoring Subscriptions
-              </h3>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                If you subscribe to monitoring alerts, we store:
-              </p>
-              <ul className='list-disc list-inside text-[var(--muted)] mt-2 space-y-1'>
-                <li>Your email address (to send alerts)</li>
-                <li>A hash of your email (for lookup purposes)</li>
-                <li>The domain you are monitoring</li>
-                <li>Your monitoring preferences</li>
-              </ul>
-              <p className='text-[var(--muted)] leading-relaxed mt-2'>
-                You can unsubscribe at any time using the link in any alert
-                email. Your data will be deleted within 90 days of
-                unsubscribing.
-              </p>
-
-              <h3 className='text-sm font-medium text-white mt-4 mb-2'>
-                Rate Limiting
-              </h3>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                To prevent abuse, we store a hash of your IP address to enforce
-                rate limits. This data is automatically deleted after 24 hours
-                and cannot be used to identify you personally.
-              </p>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>
-                How We Use Your Data
-              </h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                We use your data solely to provide the FaviconLint service:
-              </p>
-              <ul className='list-disc list-inside text-[var(--muted)] mt-2 space-y-1'>
-                <li>To perform favicon scans and return results</li>
-                <li>To send monitoring alerts when you subscribe</li>
-                <li>To prevent abuse through rate limiting</li>
-              </ul>
-              <p className='text-[var(--muted)] leading-relaxed mt-2'>
-                We do not sell, share, or use your data for advertising
-                purposes.
-              </p>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>
-                Data Storage
-              </h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                Your data is stored securely using Supabase, with servers
-                located in the United States. All data is encrypted in transit
-                and at rest.
-              </p>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>
-                Your Rights
-              </h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                You have the right to:
-              </p>
-              <ul className='list-disc list-inside text-[var(--muted)] mt-2 space-y-1'>
-                <li>Unsubscribe from monitoring alerts at any time</li>
-                <li>Request deletion of your data</li>
-                <li>Request a copy of your data</li>
-              </ul>
-              <p className='text-[var(--muted)] leading-relaxed mt-2'>
-                To exercise these rights, please contact us at hello@osull.io.
-              </p>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>
-                Third-Party Services
-              </h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                We use the following third-party services:
-              </p>
-              <ul className='list-disc list-inside text-[var(--muted)] mt-2 space-y-1'>
-                <li>Supabase - Database hosting</li>
-                <li>AWS SES - Email delivery</li>
-                <li>Vercel - Application hosting</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>
-                Changes to This Policy
-              </h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                We may update this privacy policy from time to time. We will
-                notify monitoring subscribers of any significant changes via
-                email.
-              </p>
-            </section>
-
-            <section>
-              <h2 className='text-lg font-medium text-white mb-3'>Contact</h2>
-              <p className='text-[var(--muted)] leading-relaxed'>
-                If you have any questions about this privacy policy, please
-                contact us at hello@osull.io.
-              </p>
-            </section>
+          <div className='space-y-6 text-[var(--muted)] leading-relaxed text-sm'>
+            <p>
+              When you scan a domain, we cache the result for 6 hours keyed on
+              the domain name. No account, no tracking, no cookies.
+            </p>
+            <p>
+              To stop abuse, we store a one-way hash of your IP address against
+              a scan counter for rate limiting. The raw IP is never written to
+              disk. Rate-limit rows are purged daily.
+            </p>
+            <p>
+              We keep a minimal anonymous log of each scan (domain, score,
+              timestamp, hashed IP) for debugging and basic usage stats. Nothing
+              is shared with third parties and nothing is used for advertising.
+            </p>
+            <p>
+              Data lives in Supabase (EU region). Email to reach us:{' '}
+              <a
+                href='mailto:hello@osull.io'
+                className='text-white hover:underline'
+              >
+                hello@osull.io
+              </a>
+              .
+            </p>
           </div>
 
           <div className='mt-12 pt-8 border-t'>
@@ -162,7 +56,7 @@ export default function PrivacyPage() {
               className='inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-white transition-colors'
             >
               <ArrowLeft className='w-4 h-4' />
-              Back to FaviconLint
+              Back
             </Link>
           </div>
         </div>
