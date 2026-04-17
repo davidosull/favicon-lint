@@ -84,7 +84,7 @@ export function CheckCategory({
         )}
         <span
           className={cn(
-            'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border num',
+            'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border num whitespace-nowrap',
             pillStyle[tone]
           )}
         >

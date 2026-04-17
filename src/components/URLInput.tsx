@@ -48,7 +48,7 @@ export function URLInput({ onSubmit, isLoading }: URLInputProps) {
             : undefined
         }
       >
-        <span className='text-[var(--fg-faint)] text-[15px] mr-1'>
+        <span className='text-[var(--fg-faint)] text-[15px] mr-1 flex-shrink-0 hidden sm:inline'>
           https://
         </span>
         <input
@@ -73,7 +73,7 @@ export function URLInput({ onSubmit, isLoading }: URLInputProps) {
           type='submit'
           disabled={isLoading}
           className={cn(
-            'h-10 px-4 inline-flex items-center gap-2',
+            'h-10 px-4 min-w-[100px] inline-flex items-center justify-center gap-2 flex-shrink-0',
             'bg-white text-black rounded-[7px]',
             'text-[13px] font-medium',
             'transition-transform duration-150 ease-out hover:scale-[1.015]',

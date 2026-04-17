@@ -67,14 +67,14 @@ function HomeContent() {
 
       {result && !isLoading && (
         <section className='mt-14'>
-          <div className='flex items-baseline justify-between pb-3 mb-5 border-b'>
-            <div className='text-[13px] font-[520] text-white'>
+          <div className='flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 pb-3 mb-5 border-b'>
+            <div className='text-[13px] font-[520] text-white min-w-0'>
               Results{' '}
-              <span className='font-[440] text-[var(--fg-faint)]'>
+              <span className='font-[440] text-[var(--fg-faint)] break-all'>
                 — {result.domain}
               </span>
             </div>
-            <div className='text-[12px] text-[var(--fg-faint)] flex items-center gap-2'>
+            <div className='text-[12px] text-[var(--fg-faint)] flex items-center gap-2 flex-shrink-0'>
               {result.fromCache && (
                 <>
                   <span>Cached</span>

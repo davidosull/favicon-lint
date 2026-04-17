@@ -223,12 +223,12 @@ function Pill({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium border',
+        'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium border whitespace-nowrap',
         toneMap[tone]
       )}
     >
       <span
-        className='w-1 h-1 rounded-full'
+        className='w-1 h-1 rounded-full flex-shrink-0'
         style={{ background: 'currentColor' }}
       />
       {children}
