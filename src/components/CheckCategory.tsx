@@ -2,7 +2,7 @@
 
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import type { CategoryResult } from '@/types';
+import type { CategoryResult, FaviconCheck } from '@/types';
 import { IssueCard } from './IssueCard';
 import { cn } from '@/lib/utils';
 
@@ -100,7 +100,7 @@ export function CheckCategory({
 
       {isExpanded && (
         <div className='bg-[var(--bg-elev)] pl-[50px] pr-4 pt-1 pb-4'>
-          {category.checks.map((check) => (
+          {sortByStatus(category.checks).map((check) => (
             <IssueCard key={check.id} check={check} />
           ))}
         </div>
@@ -110,7 +110,22 @@ export function CheckCategory({
 }
 
 function buildSubtitle(category: CategoryResult): string {
-  const names = category.checks.map((c) => c.name).slice(0, 3);
+  const names = sortByStatus(category.checks)
+    .map((c) => c.name)
+    .slice(0, 3);
   if (category.checks.length > 3) names.push('…');
   return names.join(', ');
+}
+
+const STATUS_ORDER: Record<FaviconCheck['status'], number> = {
+  fail: 0,
+  warning: 1,
+  info: 2,
+  pass: 3,
+};
+
+function sortByStatus(checks: FaviconCheck[]): FaviconCheck[] {
+  return [...checks].sort(
+    (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
+  );
 }
