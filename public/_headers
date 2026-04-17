@@ -1,0 +1,33 @@
+# Netlify-native cache headers for favicon assets.
+# Mirrors next.config.ts headers() so Netlify edge applies them
+# reliably to static /public files regardless of Next.js behaviour.
+
+/favicon.ico
+  Cache-Control: public, max-age=2592000, immutable
+
+/favicon.svg
+  Cache-Control: public, max-age=2592000, immutable
+
+/favicon-dark.svg
+  Cache-Control: public, max-age=2592000, immutable
+
+/favicon-16x16.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/favicon-32x32.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/icon-192.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/icon-512.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/icon-maskable-512.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/site.webmanifest
+  Cache-Control: public, max-age=86400

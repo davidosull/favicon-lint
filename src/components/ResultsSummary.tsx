@@ -37,11 +37,13 @@ export function ResultsSummary({ result }: ResultsSummaryProps) {
     ...result.categories.accessibility.checks,
   ];
 
+  const scorable = allChecks.filter((c) => c.status !== 'info');
   const counts = {
-    pass: allChecks.filter((c) => c.status === 'pass').length,
-    warning: allChecks.filter((c) => c.status === 'warning').length,
-    fail: allChecks.filter((c) => c.status === 'fail').length,
-    total: allChecks.length,
+    pass: scorable.filter((c) => c.status === 'pass').length,
+    warning: scorable.filter((c) => c.status === 'warning').length,
+    fail: scorable.filter((c) => c.status === 'fail').length,
+    info: allChecks.filter((c) => c.status === 'info').length,
+    total: scorable.length,
   };
 
   const failedCategories = (
@@ -89,13 +91,20 @@ export function ResultsSummary({ result }: ResultsSummaryProps) {
         </Cell>
 
         <Cell label='Passed' value={counts.pass} unit={`/ ${counts.total}`}>
-          {criticalPassing ? (
-            <Pill tone='ok'>All critical passing</Pill>
-          ) : (
-            <span className='text-xs text-[var(--muted)]'>
-              {counts.fail} failing
-            </span>
-          )}
+          <div className='flex items-center gap-2 flex-wrap'>
+            {criticalPassing ? (
+              <Pill tone='ok'>All critical passing</Pill>
+            ) : (
+              <span className='text-xs text-[var(--muted)]'>
+                {counts.fail} failing
+              </span>
+            )}
+            {counts.info > 0 && (
+              <span className='text-[11px] text-[var(--fg-faint)]'>
+                +{counts.info} {counts.info === 1 ? 'note' : 'notes'}
+              </span>
+            )}
+          </div>
         </Cell>
 
         <Cell label='Warnings' value={counts.warning}>
