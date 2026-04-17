@@ -83,9 +83,13 @@ function HomeContent() {
               )}
               <button
                 onClick={handleRefresh}
-                className='inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-white transition-colors cursor-pointer'
+                className='inline-flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-white transition-colors cursor-pointer'
               >
-                <RotateCw className='w-3 h-3' />
+                <RotateCw
+                  className='w-3.5 h-3.5'
+                  strokeWidth={1.75}
+                  aria-hidden='true'
+                />
                 Refresh
               </button>
             </div>

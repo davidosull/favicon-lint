@@ -43,6 +43,7 @@ export function CheckCategory({
   const scorable = category.checks.filter((c) => c.status !== 'info');
   const passedCount = scorable.filter((c) => c.status === 'pass').length;
   const totalCount = scorable.length;
+  const infoCount = category.checks.filter((c) => c.status === 'info').length;
   const tone = categoryTone(category);
 
   const subtitle = buildSubtitle(category);
@@ -52,7 +53,7 @@ export function CheckCategory({
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          'w-full grid grid-cols-[20px_1fr_auto_auto] gap-3.5 items-center',
+          'w-full grid grid-cols-[20px_1fr_auto_auto_auto] gap-3 items-center',
           'px-4 py-3 text-left',
           'transition-colors duration-150',
           'hover:bg-[var(--surface-2)] cursor-pointer'
@@ -74,6 +75,13 @@ export function CheckCategory({
             </span>
           )}
         </div>
+        {infoCount > 0 ? (
+          <span className='text-[11px] text-[var(--fg-faint)] tabular-nums whitespace-nowrap'>
+            +{infoCount} {infoCount === 1 ? 'note' : 'notes'}
+          </span>
+        ) : (
+          <span />
+        )}
         <span
           className={cn(
             'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border num',
